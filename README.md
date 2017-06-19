@@ -1417,3 +1417,6 @@ readLn =  do l <- getLine
 The Haskell 98 Report
 top | back | next | contents | function index 
 December 2002
+
+
+http://wiki.jikexueyuan.com/project/haskell-guide/module.html
