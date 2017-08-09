@@ -46,5 +46,3 @@ We can also change each element into our list into a "1" and then add them all t
 
 myLength :: [a] -> Int
 myLength = sum . map (\_->1)
-
-mylength = sum.map(\_->1)
