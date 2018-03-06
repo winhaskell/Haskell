@@ -1,0 +1,7 @@
+http://www.cs.nott.ac.uk/~pszgmh/pih.html
+
+Programming in Haskell
+2nd Edition
+Graham Hutton, University of Nottingham
+Cambridge University Press, 1st September 2016
+Paperback: ISBN 978-1316626221; Kindle: ASIN B01JGMEA3U
