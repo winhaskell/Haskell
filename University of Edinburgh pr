@@ -1,0 +1,240 @@
+-- Informatics 1 - Functional Programming 
+-- Tutorial 1
+--
+-- Due: the tutorial of week 3 (4/5 Oct.)
+
+import Data.Char
+import Data.List
+import Test.QuickCheck
+
+
+
+-- 1. halveEvens
+
+-- List-comprehension version
+halveEvens :: [Int] -> [Int]
+halveEvens xs = [ x `div` 2 | x <- xs, even x]
+
+-- Recursive version
+halveEvensRec :: [Int] -> [Int]
+halveEvensRec [] = []
+halveEvensRec (x:xs) 
+    | x `mod` 2 == 0 = x `div` 2 : halveEvensRec xs
+	| otherwise      = halveEvensRec xs
+
+-- Mutual test
+prop_halveEvens :: [Int] -> Bool
+prop_halveEvens xs = halveEvens xs == halveEvensRec xs
+
+
+
+-- 2. inRange
+
+-- List-comprehension version
+inRange :: Int -> Int -> [Int] -> [Int]
+inRange lo hi xs  = [x | x <- xs, lo <= x && x <= hi]
+
+-- Recursive version
+inRangeRec :: Int -> Int -> [Int] -> [Int]
+inRangeRec lo hi [] = []
+inRangeRec lo hi (x:xs)
+    | lo <= x && x <= hi  = x : inRangeRec lo hi xs
+	| otherwise           = inRangeRec lo hi xs
+
+
+-- Mutual test
+prop_inRange :: Int -> Int -> [Int] -> Bool
+prop_inRange lo hi xs = inRange lo hi xs == inRangeRec lo hi xs
+
+
+
+-- 3. sumPositives: sum up all the positive numbers in a list
+
+-- List-comprehension version
+countPositives :: [Int] -> Int
+countPositives xs = length [x | x <- xs, x > 0]
+
+-- Recursive version
+countPositivesRec :: [Int] -> Int
+countPositivesRec [] = 0
+countPositivesRec (x:xs)
+    | x > 0     = 1 + countPositivesRec xs
+	| otherwise = countPositivesRec xs
+
+-- Mutual test
+prop_countPositives :: [Int] -> Bool
+prop_countPositives xs = countPositivesRec xs == countPositives xs
+
+
+
+-- 4. pennypincher
+
+-- Helper function
+discount :: Int -> Int
+discount price = round ((fromIntegral price) * 0.9)
+
+-- List-comprehension version
+pennypincher :: [Int] -> Int
+pennypincher prices = sum [discount price | price <- prices, price <= 19900]
+
+-- Recursive version
+pennypincherRec :: [Int] -> Int
+pennypincherRec [] = 0
+pennypincherRec (price:prices)
+    | discount price <= 19900 = discount price * pennypincherRec prices
+	| otherwise               = pennypincherRec prices
+
+-- Mutual test
+prop_pennypincher :: [Int] -> Bool
+prop_pennypincher prices = pennypincher prices == pennypincherRec prices
+
+
+
+-- 5. sumDigits
+
+-- List-comprehension version
+multDigits :: String -> Int
+multDigits xs = product [digitToInt x | x <- xs, isDigit x]
+
+-- Recursive version
+multDigitsRec :: String -> Int
+multDigitsRec [] = 1
+multDigitsRec (x:xs)
+    | isDigit x = digitToInt x * multDigitsRec xs
+	| otherwise    = multDigitsRec xs
+
+-- Mutual test
+prop_multDigits :: String -> Bool
+prop_multDigits xs = multDigits xs == multDigitsRec xs
+
+
+
+-- 6. capitalise
+
+-- List-comprehension version
+capitalise :: String -> String
+capitalise [] = []
+capitalise (x:xs) = toUpper x : [toLower x | x <- xs]
+
+-- Helper function 
+helper [] = []
+helper (x:xs) = toLower x : helper xs  --this function takes the first item in list and makes it lower, then the next essentially turning the whole str to a lowercase 
+
+-- Recursive version
+capitaliseRec :: String -> String
+capitaliseRec [] = []
+capitaliseRec (x:xs) = toUpper x : helper xs  --main func takes string, uses helper to have a lowercase str and then makes the first item in list to a uppercase
+
+-- Mutual test
+prop_capitalise :: String -> Bool
+prop_capitalise xs = capitalise xs == capitaliseRec xs
+
+
+
+-- 7. title
+
+-- List-comprehension version
+upperCaseWord :: String -> String   					-- input string called stringsing as not part of list yet
+upperCaseWord stringsing		                        -- checks to see if stringsing is >= 4 and if it is, calls the function capitalise and applies it to this individual item
+	| length stringsing >= 4 = capitalise stringsing    -- if the length is not >= 4, it will apply the function lowerCaseWord to it.
+	| otherwise          = lowerCaseWord stringsing
+
+lowerCaseWord :: String -> String                       -- inputs strings as a string, and just applies the toLower function to it. 
+lowerCaseWord strings = [toLower string | string <- strings]	
+	
+title :: [String] -> [String]
+title [] = []
+title (x:xs) = upperCaseWord x : [upperCaseWord x | x <- xs]   --since the lsit comp will start at i2, you have to apply upperCaseWord to the first id in list before the list comp
+
+-- Recursive version
+upperCaseWordRec :: String -> String
+upperCaseWordRec stringsing
+    | length stringsing >= 4 = capitaliseRec stringsing
+	| otherwise              = helper stringsing
+
+titleRec :: [String] -> [String]
+titleRec [] = [] 
+titleRec (x:xs) = upperCaseWordRec x : titleHelpRec xs
+
+titleHelpRec [] = []
+titleHelpRec (x:xs) = upperCaseWordRec x : titleHelpRec xs
+
+-- mutual test
+prop_title :: [String] -> Bool
+prop_title xs = title xs == titleRec xs
+
+
+
+
+-- Optional Material
+
+-- 8. crosswordFind
+
+-- List-comprehension version
+crosswordFind :: Char -> Int -> Int -> [String] -> [String]
+crosswordFind letter inPosition len words = [word | word <- words,
+                                             length word == len,
+											 0 <= inPosition,
+											 inPosition < len,
+											 word !! inPosition == letter]
+
+-- Recursive version
+crosswordFindRec :: Char -> Int -> Int -> [String] -> [String]
+crosswordFindRec letter inPosition len [] = []
+crosswordFindRec letter inPosition len (word:words)
+    | length word == len && 0 <= inPosition && inPosition < len && word !! inPosition == letter
+	            = word : crosswordFindRec letter inPosition len words
+	| otherwise = crosswordFindRec letter inPosition len words
+	
+-- Mutual test
+prop_crosswordFind :: Char -> Int -> Int -> [String] -> Bool
+prop_crosswordFind letter inPosition len words = crosswordFindRec letter inPosition len words == crosswordFind letter inPosition len words 
+
+
+
+-- 9. search
+
+-- List-comprehension version
+
+search :: String -> Char -> [Int]
+search searchstring searchar = [i | (ch,i) <- zip searchstring [0..], ch == searchar]
+
+{- what is happening in the above function is that the user will input a string and a char
+then the function will create a new variable called i and ch. (ch,i) is drawn from the combination
+of the inputed strnig and an infinite list from 0 - infinite.
+
+example. inputted into GHCi was search "Bookshop" 'o'
+
+1. What would happen is that a new list is created first that has the same length as the inputted string.
+2. Then they would be placed side by side so it becomes this "Bookshop" [0,1,2,3,4,5,6,7] the 'o' dissapears for the moment.
+3. Now the last part comes into effect, we only want the list when it has ch == ourInputedString 
+4. This means that only the parts that we want and then melds them together so that we only have integers.
+5. the outpoot will look something like [1,2,6] since we told it to only take the entries of where 'o' was positioned. -}
+
+
+-- Recursive version
+searchRec :: String -> Char -> [Int]
+searchRec searchstring searchar = searchHelp searchstring searchar 0
+
+searchHelp [] goal i = []
+searchHelp (x:xs) goal i | x == goal  = i : searchHelp xs goal (i+1)
+                         | otherwise  = searchHelp xs goal (i+1)
+
+-- Mutual test
+prop_search :: String -> Char -> Bool
+prop_search searchstring searchar = searchRec searchstring searchar == search searchstring searchar
+
+
+-- 10. contains
+
+-- List-comprehension version
+contains :: String -> String -> Bool
+contains = undefined
+
+-- Recursive version
+containsRec :: String -> String -> Bool
+containsRec = undefined
+
+-- Mutual test
+prop_contains :: String -> String -> Bool
+prop_contains = undefined
