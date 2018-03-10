@@ -15,6 +15,12 @@ import Test.QuickCheck
 halveEvens :: [Int] -> [Int]
 halveEvens xs = [ x `div` 2 | x <- xs, even x]
 
+Prelude Data.List> halveEvens xs = [ x `div` 2 | x <- xs, even x]
+Prelude Data.List> halveEvens [0,2,1,7,8,56,17,18]
+[0,1,4,28,9]
+Prelude Data.List>
+
+
 -- Recursive version
 halveEvensRec :: [Int] -> [Int]
 halveEvensRec [] = []
@@ -27,12 +33,18 @@ prop_halveEvens :: [Int] -> Bool
 prop_halveEvens xs = halveEvens xs == halveEvensRec xs
 
 
-
 -- 2. inRange
 
 -- List-comprehension version
 inRange :: Int -> Int -> [Int] -> [Int]
 inRange lo hi xs  = [x | x <- xs, lo <= x && x <= hi]
+
+Prelude Data.List> inRange lo hi xs  = [x | x <- xs, lo <= x && x <= hi]
+Prelude Data.List> inRange 5 10 [1..15]
+[5,6,7,8,9,10]
+Prelude Data.List> inRange 8 15 [1..15]
+[8,9,10,11,12,13,14,15]
+Prelude Data.List>
 
 -- Recursive version
 inRangeRec :: Int -> Int -> [Int] -> [Int]
