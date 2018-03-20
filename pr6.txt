@@ -35,6 +35,10 @@ add :: Int -> Int -> Int
 add = undefined
 
 -- map
+The map function takes a function and a list and returns a list with the function applied to every element
+map :: (a -> b) -> [a] -> [b]  
+map _ [] = []  
+map f (x:xs) = f x : map f xs
 
 odds :: Int -> [Int]
 odds n = map (\ x -> 2*x+1) [0..(n-1)]
@@ -71,6 +75,12 @@ falseTrues = undefined
 
 flip :: (a -> b -> c) -> b -> a -> c
 flip = undefined
+flip takes a function and returns a function where the first two parameters are flipped
+  flip' :: (a -> b -> c) -> (b -> a -> c)  
+   flip' f = g  
+       where g x y = f y x
+  flip' :: (a -> b -> c) -> b -> a -> c  
+    flip' f y x = f x y
 
 -- filter
 
