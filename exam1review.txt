@@ -1,3 +1,7 @@
+ghci              --进入Haskell解释器
+ghci> :l test.hs  --载入test.hs文件
+ghci> :r          --重新载入文件
+
 sumsq n = 1^2 + 2^2 + 3^2 + . . . + n^2
 sumsq define
 
