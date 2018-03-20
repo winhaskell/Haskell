@@ -1,0 +1,384 @@
+Introduction
+
+doubleMe x = x + x            -- 前缀函数: doubleMe 3
+doubleUs x y = x*2 + y*2      -- 中缀函数: doubleUs 3 4 或 3 `doubleUs` 4
+-- Haskell中程序是一系列的函数的集合，函数取数据作为参数，并将它们转为想要的结果。
+-- 每个函数都会返回一个结果，可以作为其他函数的子结构。
+-- Hasekill中if返回的是表达式(expression)不是语句(statement)。
+operatedIfSmall x = (if x>=50 then x else x*2) + 1
+-- 1.3 introduction to list
+-- 列表list是一种单类型的数据结构，用来存储同构元素
+let vec  = [1] ++ 2:[3,4,5] ++ 6:[7,8,9] ++ [10]  --语法糖
+print vec -- [1,2,3,4,5,6,7,8,9,10]
+let mat = [[1,2,3],[4,5,6],[7,8,9]]  --嵌套列表
+mat!!2!!2
+let vec = [1,2,3,4,5]
+vec!!0      -- 1,访问列表中的元素
+vec!!2      -- 3
+head vec    -- 1
+tail vec    -- [2,3,4,5]
+init vec    -- [1,2,3,4]
+last vec    -- 5
+length vec  -- 5
+null   vec  -- False
+null   []   -- True
+reserve vec -- [5,4,3,2,1]
+take 3 vec  -- [1,2,3]
+drop 3 vec  -- [4,5]
+maximum vec -- 5
+minimum vec -- 1
+sum vec       -- 15
+product vec   -- 120
+3 `elem` vec  -- True
+13 `elem` vec -- False
+-- 生成列表区间
+print [1..10]   -- [1,2,3,4,5,6,7,8,9,10]
+print [2,4..10] -- [2,4,6,8,10]
+-- 生成无限列表
+take 10 (cycle [1,2,3,4])
+take 10 (repeat 5)
+replicate 10 5
+-- 列表推导 list compression
+print [x*2 | x<- [1..10]]   --[2,4,6,8,10,12,14,16,18,20]
+-- 增加谓词（predicate），过滤（filter）
+print [x*2 | x<- [1..10], x*2>10]   --[12,14,16,18,20]
+-- 判断一个数是否为奇数，奇数返回True，偶数返回False。
+let boomBangs xs = [ if x < 6 then "BOOM!" else "BANG!" | x <- xs, odd x]
+boomBangs [1..10]
+-- 对两个列表组合，使用逗号隔开的多个谓词
+print [x*y| x<-[3,4,5],y<-[8,9,10]]     -- [24,27,30,32,36,40,40,45,50]
+print [x*y| x<-[3,4,5],y<-[8,9,10],x*y>28, x* y<45] -- [30,32,36,40,40]
+-- 使用一组名词和一组形容词构成列表推导式子
+let nouns = ["hobo","frog","pope"]
+let adjectives = ["lazy","grouchy","scheming"]
+[adjective ++ " " ++ noun | adjective <- adjectives, noun <- nouns]
+-- ["lazy hobo","lazy frog","lazy pope","grouchy hobo","grouchy frog",
+-- "grouchy pope","scheming hobo","scheming frog","scheming pope"]
+-- 自定义length函数，下划线（_)表示无关紧要的临时变量
+let mylength xs = sum [1| _ <- xs]
+mylength [2,4..10]
+-- 去除字符串中非大写字母
+let removeNonUppercase xs = [c |c<-xs, c `elem` ['A'..'Z']]
+removeNonUppercase "Hello,World!"         -- "HW"
+-- 嵌套处理嵌套列表（列表的列表）
+let xxs = [[1,2,3,4],[5,6,7,8]]
+let myevens xxs = [[x|x<-xs, even x] | xs <- xxs]
+myevens xxs
+-- 元组tuple，又称有序对pair，允许存储多个异构的值
+let tt =(1,2.0,'3',"four")
+-- 使用元组的列表存储坐标
+let pts = [(x,y)|x<-[1..5],y<-[5,4..1]]
+pts!!3        -- (4,1)
+fst (pts!!3)  -- 4
+snd (pts!!3)  -- 1
+-- zip交叉配对
+let tbs = zip [1..] ["one","two","three","four","five"]
+print tbs
+-- 查找边长是整数且周长为24的直角三角形
+let rightTriangle24 = [(a,b,c)|c<-[1..(24 `div` 2)],b<-[1..c],a<-[1..b],a^2+b^2==c^2, a+b+c==24]
+rightTriangle24
+-- ch02 type reference
+{-
+Haskell常见类型有 Bool,Int,Float,Double,Num,Char,[],()等,凡是类型，首字母必须大写。
+使用小写字母表示的类型变量，表示可以是任意类型。
+:type True -- True :: Bool
+:type fst  -- fst :: (a, b) -> a
+类型类定义行为的抽象接口（类似于纯虚基类），如果某个类型是某个类型类的实例（instance），那么它必须实现该类型所描述的行为。
+具体来说，类型类就是一组函数集合，如果某类型实现某类型类的实例，就需要为这一类类型提供这些函数的实现。
+:type (==) -- (==) :: (Eq a) => a -> a -> Bool
+常见类型类有Eq等性测试、Ord比较大小、Show转化为字符串、Read从字符串读取参数并转为为种类型、Enum连续枚举、Bounded上下界限、Num数值类、Floating浮点类、Integeral实数和整数。一个类型可以有多个类型类实例，一个类型类可以包含多个类型作为实例。有时候某些类型是另外类型的先决条件（prerequisite)，如Eq是Ord实例的先决条件。
+Eq:必须定义了==和/=两个函数
+Ord:包含了所有标准类型的比较函数，如<,>,<=,>=等。compare函数取两个Ord中的相同类型的值作为参数，返回一个Ordering类型的值（有GT、LT、EQ三种值）。
+Show：常见的是show函数
+Read：常见的是read函数
+Enum：连续枚举，每个值都有前驱predecessor和后继successer，可以分别通过pred和succ函数得到。
+Bounded：反应的是实例类型的上下限，通过maxBound和minBound获得，这两个函数类型都是多态函数，原型为 (Bounded a)=>a。
+-}
+let tt =(True,1,2.0,'3',"four")
+:type tt    -- tt :: (Fractional t1, Num t) => (Bool, t, t1, Char, [Char])
+let tf = (head,tail,init,last)
+:type tf    -- tf :: ([a] -> a, [a1] -> [a1], [a2] -> [a2], [a3] -> a3)
+:t (==)       -- (==) :: Eq a => a -> a -> Bool
+5 == 5        -- True
+5 /= 5        -- False
+:t (>)        -- (>) :: Ord a => a -> a -> Bool
+5 > 5         -- False
+5 `compare` 5 -- EQ
+:t show       -- show :: Show a => a -> String
+show 3.14     -- "3.14"
+:t read       -- read :: Read a => String -> a
+read "True" || False -- True
+[read "True",False]  -- [True, False]
+(read "3.14"::Double) + 2.4       -- 5.54
+read "[1,2,3,4,5]" ++ [6]          -- [1,2,3,4,5,6]
+(read "[1,2,3,4,5]"::[Int]) ++[6] -- [1,2,3,4,5,6]
+[1..5]     --[1,2,3,4,5]
+[LT ..GT] --[LT,EQ,GT]
+succ 'D'   -- 'E'
+pred 'D'   -- 'C'
+minBound::(Bool,Int,Char)  -- (False,-9223372036854775808,'\NUL')
+maxBound::(Bool,Int,Char) -- (True,9223372036854775807,'\1114111')
+:t fromIntegral       -- fromIntegral :: (Integral a, Num b) => a -> b
+length [x|x<-[1..100],x `mod` 2 == 0, x `mod` 3 == 0]  --16
+fromIntegral (length [x|x<-[1..100],x `mod` 2 == 0, x `mod` 3 == 0]) + 3.14  --19.14
+--ch03 函数语法
+模式匹配（pattern matching）是通过检查数据是否符合特定的结构来判断是否匹配，并从模式中解析数据。
+在模式中给出小写字母的名字而不是具体的值，那么就是一个万能模式(catchal pattern)，它总能匹配输入参数，并将其绑定到模式中的名字供我们引用。
+模式用来检查参数的结构是否匹配，而哨兵（guard）用来检查参数的性质时候威震，类似于if条件判断语句。
+-- 万能匹配模式，替代if-then-else决策树
+-- 辨别1-4并输出相应的单词，否则令做处理
+sayMe :: Int -> String
+sayMe 1 = "One"
+sayMe 2 = "Two"
+sayMe 3 = "Three"
+sayMe 4 = "Four"
+sayMe x = "Not between 1 and 4"
+-- print [sayMe x| x<- [1..5]]   -- ["One","Two","Three","Four","Not between 1 and 4"]
+-- 阶乘函数 product[1..n]
+factorial :: Int -> Int
+factorial 0 = 1
+factorial n = factorial(n-1) * n
+-- factorial 10    -- 3628800
+-- 元组的模式匹配
+addTuples :: (Double,Double) ->  (Double,Double) ->  (Double,Double)
+addTuples (x1,y1) (x2,y2) = (x1+x2,y1+y2)
+-- addTuples (1,2) (3,4) -- (4.0,6.0)
+-- 获取三元组第三个元素
+thirdItem :: (a,b,c) -> c
+thirdItem (_,_,z) = z
+-- thirdItem (1,2,3) -- 3
+-- 列表推导模式匹配,使用运行时错误来指明错误
+myfirst :: [a] -> a
+myfirst [] = error "Cannot call myfirst on an empty list, dummy!"
+myfirst (x:_) = x
+-- 列表匹配，绑定多个变量
+tell :: (Show a) => [a] -> String
+tell [] = "The list is empty"
+tell (x:[]) = "The list has one element: " ++ show x
+tell (x:y:[]) = "The list has two elements: " ++ show x ++ " and " ++ show y
+tell (x:y:_) = "This list is long. The first two elements are: " ++ show x ++ " and " ++ show y
+-- tell [1..5] -- "This list is long. The first two elements are: 1 and 2"
+-- 使用as模式，将模式的值分割为多个项的同时保持对整体的引用。
+firstLetter :: String -> String
+firstLetter "" = "Empty string, whoops!"
+firstLetter all@(x:xs) = "The first letter of " ++ all ++ " is " ++ [x]
+-- firstLetter "Hello" -- "The first letter of Hello is H"
+-- 使用哨兵，哨兵是一个布尔表达式，跟在竖线(|)右边，计算为真的时候就选择对应的函数体，否则向后查找。
+tellBMI :: (RealFloat a) => a -> String
+tellBMI bmi
+    | bmi <= 18.5 = "You're underweight, you emo, you!"
+    | bmi <= 25.0 = "You're supposedly normal. Pffft, I bet you're ugly!"
+    | bmi <= 30.0 = "You're fat! Lose some weight, fatty!"
+    | otherwise   = "You're a whale, congratulations!"
+-- tellBMI 21
+-- 关于计算时数值的一些问题，参考https://hackage.haskell.org/package/base-4.9.1.0/docs/Numeric.html
+calcBMI :: (RealFloat a, Show a) => a -> a -> String
+calcBMI weight height
+    | bmi <= skinny = info++ "You're underweight, you emo, you!"
+    | bmi <= normal = info++ "You're supposedly normal. Pffft, I bet you're ugly!"
+    | bmi <= fat    = info++ "You're fat! Lose some weight, fatty!"
+    | otherwise     = info++ "You're a whale, congratulations!"
+    where bmi =  weight / height **2.5 *1.3
+          (skinny,normal,fat) = (18.5, 25.0, 30.0)  -- man24,woman22
+          info= "You are " ++ show weight ++" kgs, " ++show height ++ " m, and your bmi is " ++ show bmi ++ "! \n"
+-- tellBMI 63 172
+--列表生成器generator,let语句，谓词等构造列表推导式
+calcBMI2 :: [(Double,Double)] ->[Double]
+calcBMI2 xs = [bmi|(w,h)<-xs, let bmi = w/h**2.5 *1.3,bmi>15.0]
+-- 使用case语句，其实模式匹配不过是case表达式的语法糖而已
+describeList :: [a] -> String
+describeList xs = "The list is " ++ case xs of [] -> "empty."
+                                                [x] -> "a singleton list."
+                                                xs -> "a longer list."
+-- 使用where what语句替换case语句
+describeList2 :: [a] -> String
+describeList2 xs = "The list is " ++ what xs
+    where  what [] = "empty."
+            what [x] = "a singleton list."
+            what xs = "a longer list."
+-- ch4 递归
+-- 按照递归的基本思想，递归倾向于将问题展开为同样的子问题，并不断对子问题进行展开、求解，直达到达问题的基准条件（base case）为止。基准条件中问题不必再进行分解，必须有程序员知名一个非递归结果。
+-- 编写函数的时候，首先确定基准条件，也就是对应特殊输入的简单非递归解（比如空列表排序结果仍然为空）；然后将问题分解为一个或者多个子问题，并递归地调用自身，最后基于子问题里得到的结果，组合成为最终的解（比如快速排序中，将列表分解为两个列表和一个主元，并对这两个列表分别应用同一个函数进行排序，最后得到的结果重新组合起来，就是最终排序后的列表了。
+-- 递归在Haskell中很重要，命令式语言中倾向于“告知如何计算”（how），而Haskell倾向于“声明问题是什么”（what）。这也就是说Haskell编程是，重要的不是给出解题步骤，而是定义问题和解的描述。此时递归将大显身手，一旦确定了正确的基准条件和正确的子问题，Haskell就会根据子问题的求解结果组合成最终的结果。
+-- 递归计算最大值，注意什么时候用方括号，什么时候用圆括号
+mymax :: (Ord a) => [a] -> a
+mymax [] = error "empty list"      -- 基准模式1，空列表抛出错误
+mymax [x] = x                      -- 基准模式2，单元数列表返回元素本身
+mymax (x:xs) = max x (mymax xs)    -- 模式3，列表形式，递归调用本身
+-- mymax [1,2,5,3,4] --5
+-- 复制n份，取一个整数和一个元素，返回一个包含该整数个重复元素的列表。
+-- 因为是布尔判断，所以使用了哨兵而不是模式匹配。
+myreplicate :: Int -> a -> [a]
+myreplicate n x
+    | n<=0      = []
+    | otherwise = x:myreplicate (n-1) x
+-- myreplicate 4 3 -- [3,3,3,3]
+-- 从列表中选取前n个元素
+mytake :: (Num i, Ord i) => i -> [a] ->[a]
+mytake n _
+    | n<=0 = []          -- 基准模式1，如果要获取不大于0个元素，则返回空列表；注意这里的哨兵没有otherwise，可以转到其他的模式。
+mytake _ [] = []         -- 基准模式2，如果列表为空，返回空列表
+mytake n (x:xs) = x: mytake (n-1) xs -- 迭代模式，将列表切片，并递归操作
+-- mytake 3 [1..5]   -- [1,2,3]
+-- 翻转列表
+myreverse :: [a] -> [a]
+myreverse [] = []
+myreverse (x:xs) = myreverse xs ++ [x]
+-- myreverse [1..5] -- [5,4,3,2,1]
+-- 生成无限列表
+myrepeat :: a -> [a]
+myrepeat x = [x] ++ myrepeat x
+-- mytake 4 (myrepeat 3) -- [3,3,3,3]
+-- 打包
+myzip :: [a]->[b]->[(a,b)]
+myzip [] _ = []
+myzip _ [] = []
+myzip (x:xs) (y:ys) = (x,y):myzip xs ys
+-- myzip [1..5] [5..1]  -- []
+-- myzip [1,2,3,4,5] [5,4,3,2,1] -- [(1,5),(2,4),(3,3),(4,2),(5,1)]
+-- 查看是否子元素
+myelem :: (Eq a) => a -> [a] -> Bool
+myelem a [] = False
+myelem a (x:xs)
+    | a == x = True
+    | otherwise = a `myelem` xs
+--  3 `myelem` [1..5] -- True
+-- 13 `myelem` [1..5] -- False
+-- 快速排序
+-- 使用谓词和列表推导
+myqsort :: (Ord a) => [a] -> [a]
+myqsort [] = []              -- 基准模式是空列表
+myqsort (x:xs) =             -- 迭代模式是，将小于当前元素的放在左边，大于当前元素的放在右边，分别对左右两部分进行快排
+    myqsort [a|a<-xs, a<=x] ++ [x] ++ myqsort [a|a<-xs, a>x]
+-- 使用filter函数
+myqsort2 :: (Ord a) => [a] -> [a]
+myqsort2 [] = []              -- 基准模式是空列表
+myqsort2 (x:xs) =             -- 迭代模式是，将小于当前元素的放在左边，大于当前元素的放在右边，分别对左右两部分进行快排
+    let smallerOrEqual = filter (<=x) xs
+        larger = filter (>x) xs
+    in myqsort2 smallerOrEqual ++ [x] ++ myqsort2 larger
+-- myqsort [1,5,3,2,7,6,4,9,8]  -- [1,2,3,4,5,6,7,8,9]
+-- ch05 高阶函数
+-- Haskell中可以把函数用做参数和返回值，这样的特定成为高阶函数。
+-- C++14支持函数返回自动类型推导，可以返回一个函数内部的lambda，也就是支持高阶函数，好BUG啊。
+{-
+// g++ -std=c++14 xxx.cpp
+auto fun(){
+    auto myfun = [](int a, int b){return a>b?a:b;};
+    return myfun;
+}
+auto myfun = fun();
+cout << myfun(3,4)<<endl;
+-}
+-- 只要在类型签名中看到了箭头符号(->)，就意味着它是一个将箭头左边视为参数类型并将箭头右侧部分作为返回类型的函数。
+-- 如果遇到a->(a->a)这样的类型签名，说明它是一个函数，取类型为a的值作为参数，返回一个函数同样取类型a为参数，并且返回值类型是a。
+-- 这样做，可以以部分参数调用函数，得到一个部分应用（Partial application）函数，该函数所接受的参数是一个函数，和之前少传入的参数类型一致。
+multThree :: Int -> (Int -> (Int -> Int))
+multThree x y z = x*y*z
+-- multiThree 3 4 5 -- 60
+-- 使用部分应用
+multTwoWithThree :: Int -> Int -> Int
+multTwoWithThree x y = multThree 3 x y
+-- multiTwoWithThree 4 5 -- 60
+-- 在ghc中使用部分应用
+multTwoWithThree2 = multThree 3   -- hs文件中不用let，但是ghc中需要使用let
+-- multiTwoWithThree2 4 5 -- 60
+-- 对中缀函数使用截断,除以10
+dividedByTen :: (Floating a) => a -> a
+dividedByTen = (/10)
+-- dividedByTen 200   -- 20.0
+-- 对中缀函数使用截断
+subtractFour :: Int -> Int
+subtractFour = (subtract 4)
+-- [subtractFour x | x<-[1..5]] -- [-3,-2,-1,0,1]
+-- 对中缀函数使用截断
+isUpperCase :: Char -> Bool
+isUpperCase = (`elem` ['A'..'Z'])
+-- [isUpperCase x | x<-"Hello"] -- [True,False,False,False,False]
+-- 取另一个函数作为参数，并返回函数
+applyTwice :: (a->a) -> a -> a
+applyTwice f x = f (f x)
+-- applyTwice (+3) 10           -- 16
+-- applyTwice (++[3]) [10]      -- [10,3,3]
+-- applyTwice ([3]++) [10]      -- [3,3,10]
+-- 实现zipWith，取一个函数和两个列表作为输入，使用函数调用从两个列表中取出的相应元素
+-- 在编写高阶函数时，如果拿不准类型，可以先省略类型声明，然后在使用:t命令查看Haskell的类型推导结果
+myzipWith :: (a -> b -> c) -> [a] -> [b] -> [c]
+myzipWith _ [] _ = []
+myzipWith _ _ [] = []
+myzipWith f (x:xs) (y:ys) = f x y : myzipWith f xs ys
+-- myzipWith (+) [1,2,3,4,5] [11,12,13,14,15]  -- [12,14,16,18,20]
+-- myzipWith (*) (replicate 5 2) [1..]         -- [2,4,6,8,10]
+-- 实现flip函数，以一个函数为参数，返回参数顺序颠倒的函数
+myflip :: (a->b->c) -> (b -> a -> c)
+myflip f x y = f y x
+-- zip [1..5] "hello"                       -- [(1,'h'),(2,'e'),(3,'l'),(4,'l'),(5,'o')]
+-- myflip zip [1..5] "hello"                -- [('h',1),('e',2),('l',3),('l',4),('o',5)]
+-- myzipWith div (repeat 2)  [1..5]         -- [2,1,0,0,0]
+-- flip (myzipWith div) (repeat 2) [1..5]   -- [0,1,1,2,2]
+-- 函数式程序员工具箱
+-- 身为函数式程序员，很少需要对单个值求解花费太多心思。更多情况下是，处理一系列的数值、字母或者其他类型的数据
+-- 通过转换了这一类集合来求取最后的结果。常用的工具函数有：map、filter
+-- map接受一个取a返回b的函数和一组a值的列表为参数，返回一组b值的列表
+mymap:: (a->b) -> [a] -> [b]
+mymap _ [] = []
+mymap f (x:xs) = f x : mymap f xs
+-- filter 去一个谓词（predicate）和一个列表作为参数 ，返回由列表所有符合该条件的元素组成的列表。
+-- 谓词特指判断事物是True或者False的函数，也就是返回布尔值的函数
+myfilter :: (a->Bool) -> [a] -> [a]
+myfilter _ [] = []
+myfilter f (x:xs)
+    | f x = x : myfilter f xs
+    | otherwise = myfilter f xs
+-- mymap (+2) [1..10]    -- [3,4,5,6,7,8,9,10,11,12]
+-- myfilter (>5) [1..10] -- [6,7,8,9,10]
+-- myfilter (`elem` ['a'..'z']) "Hi, my name is Ausk！"   -- "imynameisusk"
+-- myfilter (`elem` ['A'..'Z']) "Hi, my name is Ausk！"   -- "HA"
+-- myfilter (<15) (myfilter even [1..20])     -- [2,4,6,8,10,12,14]
+-- [x|x<-[1..20], even x,x<15]                -- [2,4,6,8,10,12,14]
+-- 计算小于1000的所有奇数的平方的和
+sum (takeWhile (<1000) (filter odd (map (^2) [1..])))   -- 5456
+sum (takeWhile (<1000) [x^2| x<-[1..],odd x])          -- 5456
+
+
+chain :: Integer -> [Integer]
+chain 1=[1]     -- 基准条件
+chain n         -- 哨兵选择
+    | even n = n:chain (n `div` 2)
+    | odd n  = n:chain (n*3 + 1)
+--克拉兹序列，定义如下
+--从任意自然数开始，如果是1则停止；如果是偶数则除以2；如果是奇数则乘以3然后加上1。取得结果并重复过程。
+
+-- Haskell中的Lambda是一次性的匿名函数，以右斜杠开头，后面紧跟着函数的参数列表，参数之间使用空格分割，->之后是函数体，通常使用圆括号括起来。
+map (+3) [1..5]                               -- [4,5,6,7,8]
+map (\x -> x+3) [1..5]                        -- [4,5,6,7,8]
+map (\(a,b) -> a+b) (zip [1..5] [11..15])     -- [12,14,16,18,20]
+zipWith (\a b -> a*10 + b) [1..] [5,4,3,2,1]  -- [15,24,33,42,51]
+-- 处理列表大多数具有笃定模式。通常会将基准条件设置为空列表，然后引入 (x:xs)模式，再对单个元素和余下的列表做一些事情。
+-- 因为这一模式比较常见，Haskell中提供了折叠（fold）函数来使之简化。通过折叠函数将一个数据结构（如列表）归约为单个值。
+-- 一个折叠可以从左边或者右边开始折叠，通常取一个二元函数、一个待折叠的列表(和一个初始值)，得到归约后的单值。
+-- 左折叠(foldl、foldl1)从左侧开始，右折叠(foldr、foldr1)从右侧开始。
+-- 使用lambda表达式和foldl进行折叠
+suml :: (Num a) => [a] -> a
+suml xs = foldl (\acc x-> acc + x) 0 xs
+-- 使用foldl进行折叠
+suml2 :: (Num a) => [a] -> a
+suml2 xs = foldl (+) 0 xs
+-- 使用lambda表达式和foldr进行折叠
+sumr :: (Num a) => [a] -> a
+sumr xs = foldr (\x acc-> acc + x) 0 xs
+-- 使用foldr进行折叠
+sumr2 :: (Num a) => [a] -> a
+sumr2 xs = foldr (+) 0 xs
+-- 使用左折叠实现map
+mapl :: (a->b) -> [a] -> [b]
+mapl  f xs = foldl(\acc x -> acc ++ [f x]) [] xs
+-- mapl (+1) [1..5] -- [2,3,4,5,6]
+-- 使用右折叠实现map
+mapr :: (a->b) -> [a] -> [b]
+mapr  f xs = foldr(\x acc -> f x : acc) [] xs
+-- mapr (+1) [1..5] -- [2,3,4,5,6]
+-- 使用折叠实现一些函数
+mymax_foldr1 ::(Ord a) => [a] -> a
+mymax_foldr1 = foldr1 max  -- 使用foldr1函数和max组合，得到求最值的函数
+-- mymax [2,4,10,7,3,8,6,1,5,9] -- 10
