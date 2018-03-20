@@ -83,6 +83,23 @@ flip takes a function and returns a function where the first two parameters are 
     flip' f y x = f x y
 
 -- filter
+filter :: (a -> bool) -> [a] -> [a]
+filter _ [] = []
+filter p (x:xs)
+   | p x = x : filter p xs
+   | otherwhise = filter p xs
+
+filter1 :: (a -> Bool) -> [a] -> [a]
+filter1 p = concat.map box where box x | p x = [x] | otherwise = []
+
+*Main> filter (>3) [1,5,3,6]
+[5,6]
+*Main> filter even [1..10]
+[2,4,6,8,10]
+*Main> let notNull x = not (null x) in filter notNull [[1,2,3],[],[2,2]]
+[[1,2,3],[2,2]]
+*Main>
+
 
 -- all the off numbers from [1..100]
 
@@ -109,3 +126,8 @@ nums35 = undefined
 
 elem :: (Eq a) => a -> [a] -> Bool
 elem = undefined
+   elem' :: (Eq a) => a -> [a] -> Bool  
+   elem' a [] = False  
+   elem' a (x:xs)  
+       | a == x    = True  
+       | otherwise = a `elem'` xs
