@@ -1,0 +1,99 @@
+Prelude> rr xs = [ if x == 'a' then 1 else 0 | x <- xs]
+Prelude> rr "abd"
+[1,0,0]
+Prelude> rr xs = sum[ if x == 'a' then 1 else 0 | x <- xs]
+Prelude> rr "abd"
+1
+Prelude> rr "abda"
+2
+Prelude> rr xs = [ if x == 'a' then 1 else 0 | x <- xs]
+Prelude> rr "abda"
+[1,0,0,1]
+Prelude> rrr st = [ c | c <- st, c `elem` ['a']]
+Prelude> rrr "aaab"
+"aaa"
+Prelude> rr xs = count[ if x == 'a' then 1 else 0 | x <- xs]
+
+<interactive>:105:9: error:
+    Variable not in scope: count :: [Integer] -> t
+Prelude> rrr st =count [ c | c <- st, c `elem` ['a']]
+
+<interactive>:106:9: error:
+    Variable not in scope: count :: [Char] -> t
+Prelude> rrr st =sum[ c | c <- st, c `elem` ['a']]
+
+<interactive>:107:9: error:
+    * No instance for (Num Char) arising from a use of `sum'
+    * In the expression: sum [c | c <- st, c `elem` ['a']]
+      In an equation for `rrr':
+          rrr st = sum [c | c <- st, c `elem` ['a']]
+Prelude> rrr st = count[ c | c <- st, c `elem` ['a']]
+
+<interactive>:108:10: error:
+    Variable not in scope: count :: [Char] -> t
+Prelude> rrr st = [ c | c <- st, c `elem` ['a']]
+Prelude> rrr "aaab"
+"aaa"
+Prelude> sum [1 | _ <- xs]length' xs = sum [1 | _ <- xs]
+
+<interactive>:111:5: error: Parse error in pattern: [1 | _ <- xs]
+Prelude> length' xs = sum [a | _ <- xs]
+
+<interactive>:112:19: error: Variable not in scope: a
+Prelude> length' xs = sum ['a" | _ <- xs]
+
+<interactive>:113:33: error:
+    lexical error in string/character literal at end of input
+Prelude> length' xs = sum ['a' | _ <- xs]
+
+<interactive>:114:14: error:
+    * No instance for (Num Char) arising from a use of `sum'
+    * In the expression: sum ['a' | _ <- xs]
+      In an equation for length': length' xs = sum ['a' | _ <- xs]
+Prelude> length' xs = sum [1| _ <- xs]
+Prelude> length' "aaa"
+3
+Prelude> rr "abc"
+[1,0,0]
+Prelude> rr "aaaa"
+[1,1,1,1]
+Prelude> rrr st = [ c | c <- st, c `elem` ['a']]
+Prelude> length' st = sum [1| _ <- st]
+Prelude> rrr "aaaa"
+"aaaa"
+Prelude> length' rrr "aaaa"
+
+<interactive>:122:9: error:
+    * Couldn't match expected type `[t0]'
+                  with actual type `[Char] -> [Char]'
+    * Probable cause: `rrr' is applied to too few arguments
+      In the first argument of length', namely `rrr'
+      In the expression: length' rrr "aaaa"
+      In an equation for `it': it = length' rrr "aaaa"
+      
+Prelude> length' "aaaa"
+4
+Prelude> length' "aaaabbb"
+7
+Prelude> length'( rrr "abc")
+1
+Prelude> length'( rrr "aabc")
+2
+Prelude> length'( rrr "aaac")
+3
+Prelude> length'( rrr "aaaa")
+4
+
+
+Prelude> count xs =  length'( rrr xs)
+Prelude> count "abc"
+1
+Prelude> count "abca"
+2
+Prelude> count "aaaa"
+4
+Prelude> :t count
+count :: Num a => [Char] -> a
+Prelude>
+Prelude> rrr "abű"
+"a"
