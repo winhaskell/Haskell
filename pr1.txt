@@ -1,0 +1,169 @@
+Problem 4
+(*) Find the number of elements of a list.
+
+Example in Haskell:
+
+Prelude> myLength [123, 456, 789]
+3
+Prelude> myLength "Hello, world!"
+13
+
+---------------------------------------------------
+
+1 The simple, recursive solution
+This is similar to the length from Prelude:
+myLength           :: [a] -> Int
+myLength []        =  0
+myLength (_:xs)    =  1 + myLength xs
+The prelude for haskell 2010 can be found here.
+
+2 Same, but using an "accumulator"
+myLength :: [a] -> Int
+myLength list = myLength_acc list 0
+	where
+		myLength_acc [] n = n
+		myLength_acc (_:xs) n = myLength_acc xs (n + 1)
+
+3 Using foldl/foldr
+myLength :: [a] -> Int
+myLength1 =  foldl (\n _ -> n + 1) 0
+myLength2 =  foldr (\_ n -> n + 1) 0
+myLength3 =  foldr (\_ -> (+1)) 0
+myLength4 =  foldr ((+) . (const 1)) 0
+myLength5 =  foldr (const (+1)) 0
+myLength6 =  foldl (const . (+1)) 0
+
+4 Zipping with an infinite list
+We can also create an infinite list starting from 1. Then we "zip" the two lists together and take the last element (which is a pair) from the result:
+
+myLength :: [a] -> Int
+myLength1 xs = snd $ last $ zip xs [1..] -- Just for fun
+myLength2 = snd . last . (flip zip [1..]) -- Because point-free is also fun
+myLength3 = fst . last . zip [1..] -- same, but easier
+
+5 Mapping all elements to "1"
+We can also change each element into our list into a "1" and then add them all together.
+
+myLength :: [a] -> Int
+myLength = sum . map (\_->1)
+
+
+import Data.List (sort)
+ 
+-- requirements: http://lambda.inf.elte.hu/fp/FL_AboutCourse_en.xml
+
+-- standard prelude arithmetic functions: (+), (-), (*), (^), div, sqrt
+
+-- Try: 2+3*4
+
+-- Try: 2*3^4
+
+-- Try: 2^3^4
+
+-- Ex: How many seconds are there in a normal year?
+
+-- function notation
+
+-- Ex:Decide whether 23 divides 532253373 or not.
+
+
+
+-- Try: [1,2,3]
+
+-- standard prelude list functions: head, tail, take, drop, length, sum, product, (++), reverse
+
+-- Try: head [1,2,3,4,5]
+
+-- Try: tail [1,2,3,4,5]
+
+-- Try: take 3 [1,2,3,4,5]
+
+-- Try: drop (1+2) [1,2,3,4,5]
+
+-- Try: sum [1,2,3,4,5]
+
+-- Try: product [1,2,3,4,5]
+
+-- Try: [1,2,3] ++ [4,5]
+
+-- Try: reverse [1,2,3,4,5]
+
+-- Try: length [1,2,3,4,5]
+
+-- Ex: last 2 elements of the list [1,2,3,4,5]
+
+-- Ex: all elements of [1,2,3,4,5] except the last two
+
+-- Ex: all but the last and first element of [1,2,3,4,5]
+
+-- Try: reverse (reverse [1,2,3,4,5])
+
+
+
+-- writing script: :load, :reload, :set editor name, :edit name, :edit, :type, :quit
+
+inc x = x + 1
+
+-- Ex: double
+
+double x = x * 2
+
+-- Ex: quadruple (you can reuse double)
+
+-- quadruple x = x * 4
+-- or
+quadruple x = double (double x)
+
+-- Ex: []
+
+-- Try: [1..10]
+
+-- Ex: upAndDown n = [1,2,3,...,n,n-1,n-2,...,1]
+
+--upAndDown n = [1..n] ++ reverse [1..n - 1]
+upAndDown n = [1..n] ++ [n-1, n-2..1]
+
+-- Ex: list the numbers from n to -n: for example,
+-- downwards 4 should be [4,3,2,1,0,-1,-2,-3,-4]
+
+downwards n = [n,n-1 .. -n]
+
+-- Ex: factorial (use product and ..)
+
+factorial n = product [1..n]
+
+-- Ex: integer average (use sum, div)
+
+average ls = div (sum ls) (length ls)
+
+-- Try: sort [4,3,2,5,2,2,5,6,8]
+
+-- Ex: simple median (the middle element in a list, use sort, length, drop, take)
+
+median ls = take 1 (drop (div (length ls) 2) (sort ls))
+
+
+
+-- naming requirements: lowercase, keywords
+
+
+
+-- layout rule, no tabs, where
+
+a = b + c
+  where
+    b = 1
+    c = 2
+d = a * 2
+
+-- comments
+
+
+
+-- Ex: parenthesise: 2*3+4*5
+
+-- Ex: parenthesise: 2+3*4^5
+
+-- Ex: parenthesise: 2^3*4
+
+
