@@ -1,7 +1,7 @@
 Course:	Functional languages (MSc) - IPM-13feszFUNLEG
 Teacher:	Bozo Istvan, Kaposi Ambrus, Poór Artúr
 Assignment:	Midterm exam  
-Start:     2018-03-23, 14:00:00
+Start:        2018-03-23, 14:00:00
 Deadline:	2018-03-23, 15:50:00
 
 Description
