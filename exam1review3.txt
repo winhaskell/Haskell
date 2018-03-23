@@ -1,0 +1,88 @@
+In this excercise we will define the two different representations of complex numbers: the Cartesian and the Polar version. We will define conversions between the two representations and addition and multiplication for both.
+
+A Cartesian complex number (x, y) can be thought about as a point on a 2-dimensional plane: x is the x coordinate, y is the y coordinate (both have type Double).
+
+A Polar complex number (r, phi) can be thought about as a 2-dimensional vector where r is the length of the vector and phi is the angle it makes with the x axis. The angle is given in radians, that is, it is 0 <= r < 2*pi.
+
+We define the following abbreviations (you should add these in the beginning of your file):
+
+type Cart = (Double, Double)
+type Radian = Double
+type Polar = (Double, Radian)
+First define the addCart function which adds two Cartesian complex numbers: the result of adding (x, y) and (x', y') should be (x+x', y+y').
+
+addCart :: Cart -> Cart -> Cart
+Define a function which adds two radians. The result of addRadian phi phi' should be the phi + phi' if phi + phi' < 2*pi, otherwise it should be phi + phi' - 2*pi.
+
+addRadian :: Radian -> Radian -> Radian
+Define multiplication of Polar form complex numbers. The lengths should be multiplied and the angles should be added (as radian values, so use the addRadian function).
+
+mulPolar :: Polar -> Polar -> Polar
+Define conversion from Polar to Cart. The Cartesian form of a Polar number (r, phi) should be (r*cos phi, r*sin phi).
+
+toCart :: Polar -> Cart
+Define the length of a Cartesian complex number. The length of (x, y) should be the square root of x^2 + y^2. Use the sqrt function.
+
+lenCart :: Cart -> Double
+Define the angle of a Cartesian complex number. For (x, y) the result is given as follows:
+
+if x > 0 and y > 0 then the result is atan (y/x)
+if x < 0 and y > 0 then the result is pi - atan (y/(-x))
+if x < 0 and y < 0 then the result is pi + atan ((-y)/(-x))
+if x > 0 and y < 0 then the result is 2*pi - atan ((-y)/x)
+if x == 0 and y > 0 then the result is pi/2
+if x == 0 and y < 0 then the result is 3*pi/2
+if x > 0 and y == 0 then the result is 0
+if x < 0 and y == 0 then the result is pi
+if x == 0 and y == 0 then the result can be anything (there is no angle of the 0-length vector)
+angleCart :: Cart -> Radian
+Define conversion from the Cartesian to the Polar version: the length of an a :: Cart is given by lenCart and the angle is given by angleCart
+
+toPolar :: Cart -> Polar
+Define multiplication of Cartesian complex numbers using conversions: first convert the numbers to their Polar versions (using toPolar), then use mulPolar to multiply them, them convert the result back to the Cartesian version using toCart.
+
+mulCart :: Cart -> Cart -> Cart
+In a similar way, define addition for Polar complex numbers: first convert them to Cartesian using toCart, then add them using addCart, then convert them back to Polar using toPolar.
+
+addPolar :: Polar -> Polar -> Polar
+
+
+type Cart = (Double, Double)
+type Radian = Double
+type Polar = (Double, Radian)
+
+addCart :: Cart -> Cart -> Cart
+addCart (x,y) (x',y') = (x + x', y + y')
+
+addRadian :: Radian -> Radian -> Radian
+addRadian phi phi' | phi + phi' < 2*pi = phi + phi' | otherwise = phi + phi' - 2*pi
+
+mulPolar :: Polar -> Polar -> Polar
+mulPolar (r,phi) (r',phi') = (r*r',addRadian phi phi' )
+
+toCart :: Polar -> Cart
+toCart (r, phi)=((r*cos phi),(r*sin phi))
+
+lenCart :: Cart -> Double
+lenCart (x,y) = sqrt(x^2 + y^2)
+
+angleCart :: Cart -> Radian
+angleCart (x, y) 
+ | x > 0 && y > 0 = atan (y/x)
+ | x < 0 && y > 0 = pi - atan (y/(-x))
+ | x < 0 && y < 0 = pi + atan ((-y)/(-x))
+ | x > 0 && y < 0 = 2*pi - atan ((-y)/x)
+ | x == 0 && y > 0 = pi/2
+ | x == 0 && y < 0 = 3*pi/2
+ | x > 0 && y == 0 = 0
+ | x < 0 && y == 0 = pi
+ | x == 0 && y == 0 = -999999
+
+toPolar :: Cart -> Polar
+toPolar (x,y) = (lenCart (x,y), angleCart (x, y))
+
+mulCart :: Cart -> Cart -> Cart
+mulCart (a,b) (c,d) = toCart (mulPolar(toPolar(a,b))(toPolar(c,d)))
+
+addPolar :: Polar -> Polar -> Polar
+addPolar (p,ph) (q,qh) = toPolar (addCart (toCart(p,ph)) (toCart(q,qh)))
