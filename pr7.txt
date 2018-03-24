@@ -1,3 +1,5 @@
+--Thanks! https://github.com/CGenie/haskell-snake/blob/master/src/Snake.hs
+
 {-# LANGUAGE TemplateHaskell, FlexibleContexts #-}
 module Snake where
 
