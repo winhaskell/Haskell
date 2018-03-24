@@ -136,7 +136,21 @@ testTurnTo = [ -- turnTo does not change the position of the snake
              , snakeDir (turnTo north aSnake) `eqDir` north
              ]
 			 
-			 
+
+step :: Snake -> Snake	 
+step px = (snakeDir px,take (snakeLength px) ((fst(snakeBody px!!0)+1,snd(snakeBody px!!0)):snakeBody px), snakeLength px)
+
+testStep :: [Bool]
+testStep = [ snakeBody (step aSnake) == [(1,0),(0,0)]
+           , snakeBody (step (step aSnake)) == [(2,0),(1,0),(0,0)]
+           , snakeBody (step (step (step (step (step aSnake))))) == [(5,0),(4,0),(3,0),(2,0)]
+           , snakeBody (step (step (step (step (step (step aSnake)))))) == [(6,0),(5,0),(4,0),(3,0)]
+           , snakeBody (step (turnTo north (step aSnake))) == [(1,1),(1,0),(0,0)]
+           , snakeDir (step aSnake) `eqDir` snakeDir aSnake
+           , length (snakeBody (step (step (step (step (step (step aSnake))))))) == snakeLength aSnake
+           , snakeLength aSnake == snakeLength (step (step aSnake)) 
+           ]
+
 
 Ok, modules loaded: Main.
 
@@ -152,4 +166,9 @@ Ok, modules loaded: Main.
 [True,True,True,True,True,True]
 *Main> testTurnTo
 [True,True,True,True,True]
+*Main> testStep
+[True,True,True,True,False,True,True,True]
 *Main>
+
+
+
