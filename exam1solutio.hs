@@ -38,7 +38,13 @@ testIsDirs = [ isWest  west
              ]
 			 
 --eqDir :: Dir -> Dir -> Bool
-eqDir p q= if (isWest p) == (isWest q) then True else False
+eqDir a b
+ |(isEast a)  && (isEast b)   = True
+ |(isNorth a) && (isNorth b)  = True
+ |(isWest a)  && (isWest b)   = True
+ |(isSouth a) && (isSouth b)  = True
+ | otherwise                  = False
+ 
 
 testEqDir :: [Bool]
 testEqDir = [ west  `eqDir` west
