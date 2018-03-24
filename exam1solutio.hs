@@ -81,14 +81,15 @@ testTurnRight = [ turnRight west  `eqDir` north
                 ]
 		  
 
-
 oppositeDir :: Dir -> Dir -> Bool
 oppositeDir p q
- |(isWest west) && (isEast east)  = True
- |(isEast east) && (isWest west)  = True
- |(isNorth north) &&(isSouth south) = True
- |(isSouth south) && (isNorth north) = True
+ |(isWest p) && (isEast q)  = True
+ |(isEast p) && (isWest q)  = True
+ |(isNorth p) &&(isSouth q) = True
+ |(isSouth p) && (isNorth q) = True
  | otherwise = False
+ 
+ 
  
 testOppositeDir :: [Bool]
 testOppositeDir = [ oppositeDir west east
@@ -142,8 +143,9 @@ step =
  
 
 Ok, modules loaded: Main.
+
 *Main> testOppositeDir
-[True,True,True,True,False,False,False,False,False]
+[True,True,True,True,True,True,True,True,True]
 *Main> testTurnRight
 [True,True,True,True]
 *Main> testEqDir
