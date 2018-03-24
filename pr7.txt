@@ -1,4 +1,9 @@
---Thanks! https://github.com/CGenie/haskell-snake/blob/master/src/Snake.hs
+--Thanks! 
+https://github.com/CGenie/haskell-snake/blob/master/src/Snake.hs
+http://shuklan.com/haskell/lec10.html#/0/14
+https://github.com/CGenie/haskell-snake
+https://rosettacode.org/wiki/Snake#Haskell
+https://github.com/samtay/snake/blob/master/src/Snake.hs
 
 {-# LANGUAGE TemplateHaskell, FlexibleContexts #-}
 module Snake where
