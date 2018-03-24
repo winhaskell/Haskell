@@ -44,7 +44,6 @@ eqDir a b
  |(isWest a)  && (isWest b)   = True
  |(isSouth a) && (isSouth b)  = True
  | otherwise                  = False
- 
 
 testEqDir :: [Bool]
 testEqDir = [ west  `eqDir` west
@@ -68,10 +67,10 @@ testEqDir = [ west  `eqDir` west
 
 turnRight :: Dir -> Dir
 turnRight m 
- | (isWest m)  = north 
- | (isNorth m) = east 
- | (isEast m)  = south  
- | (isSouth m) = west
+ |(isWest m)  = north 
+ |(isNorth m) = east 
+ |(isEast m)  = south  
+ |(isSouth m) = west
 
 testTurnRight :: [Bool]
 testTurnRight = [ turnRight west  `eqDir` north
@@ -81,6 +80,7 @@ testTurnRight = [ turnRight west  `eqDir` north
                 ]
 		  
 
+
 oppositeDir :: Dir -> Dir -> Bool
 oppositeDir p q
  |(isWest p) && (isEast q)  = True
@@ -88,7 +88,6 @@ oppositeDir p q
  |(isNorth p) &&(isSouth q) = True
  |(isSouth p) && (isNorth q) = True
  | otherwise = False
- 
  
  
 testOppositeDir :: [Bool]
@@ -102,7 +101,7 @@ testOppositeDir = [ oppositeDir west east
                   , not (oppositeDir east north)
                   , not (oppositeDir east east)
                   ]
-				  
+
 aSnake :: Snake
 aSnake = (east, [(0,0)], 4)
 
@@ -110,18 +109,18 @@ snakeBody :: Snake -> [Position]
 snakeBody (d, ps, l) = ps
 
 snakeDir :: Snake -> Dir
-snakeDir (d, ps, l) = d
-                  
+snakeDir(d, ps, l) = d
+fst3(x,y,z)=x
+              
 snakeLength :: Snake -> Int
 snakeLength (d, ps, l) = l
-				  
+
+
 turnTo :: Dir -> Snake -> Snake
-turnTo p snakeDir(aSnake)
- |oppositeDir p snakeDir(aSnake) = False
- | otherwise = True
-
-
-                  
+turnTo d snakeDirection
+       | oppositeDir d (snakeDir snakeDirection) = snakeDirection
+       | otherwise                               = (d,snakeBody snakeDirection, snakeLength snakeDirection)
+	   
 testTurnTo :: [Bool]
 testTurnTo = [ -- turnTo does not change the position of the snake
                snakeBody (turnTo west aSnake) == snakeBody aSnake
@@ -136,11 +135,8 @@ testTurnTo = [ -- turnTo does not change the position of the snake
                -- turning to north from east is allowed
              , snakeDir (turnTo north aSnake) `eqDir` north
              ]
-
-step :: Snake -> Snake
-step = 
-
- 
+			 
+			 
 
 Ok, modules loaded: Main.
 
@@ -154,4 +150,6 @@ Ok, modules loaded: Main.
 [True,True,True,True,True,True,True,True,True,True]
 *Main> testDirs
 [True,True,True,True,True,True]
+*Main> testTurnTo
+[True,True,True,True,True]
 *Main>
