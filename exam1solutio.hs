@@ -147,7 +147,7 @@ Ok, modules loaded: Main.
 *Main> testTurnRight
 [True,True,True,True]
 *Main> testEqDir
-[True,True,True,True,True,True,True,True,False,False,True,False,False,False,True,False]
+[True,True,True,True,True,True,True,True,True,True,True,True,True,True,True,True]
 *Main> testIsDirs
 [True,True,True,True,True,True,True,True,True,True]
 *Main> testDirs
