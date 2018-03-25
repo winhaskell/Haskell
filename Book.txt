@@ -1,0 +1,8 @@
+http://learnyouahaskell.com/introduction#about-this-tutorial
+
+Introduction
+About this tutorial
+Welcome to Learn You a Haskell for Great Good! 
+
+If you're reading this, chances are you want to learn Haskell. 
+Well, you've come to the right place, but let's talk about this tutorial a bit first.
