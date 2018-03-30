@@ -170,5 +170,8 @@ Ok, modules loaded: Main.
 [True,True,True,True,False,True,True,True]
 *Main>
 
+20/24 考试后做得分
+13/24 考试得分重考 
+
 
 
