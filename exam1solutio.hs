@@ -175,5 +175,7 @@ Ok, modules loaded: Main.
 
 重考 过关！
 
+还得练习一些题 才能真正理解这些 
 
+要求 达到正确率80% Pass!
 
