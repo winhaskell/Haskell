@@ -46,12 +46,16 @@ vowels = undefined
 -- or 5
 
 nums35 :: [Int] -> [Int]
-nums35 = undefined
+nums35 = [x | x <- [1..999], x `mod` 3 == 0 || x `mod` 5 == 0]
 
 -- Ex: return True if the first input is in the second input
 
 elem :: (Eq a) => a -> [a] -> Bool
-elem = undefined
+  elem a [] = False  
+  elem a (x:xs)  
+       | a == x    = True  
+       | otherwise = a `elem` xs
+
 
 -- list comprehensions
 
