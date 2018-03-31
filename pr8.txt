@@ -119,7 +119,12 @@ map' = undefined
 -- Ex: define the filter function using list comprehension
 
 filter' :: (a -> Bool) -> [a] -> [a]
-filter' = undefined
+filter p xs = [ x | x <- xs, p x ]
+
+filter p [] = []
+filter p (x:xs) | p x = x : filter p xs
+                | otherwise = filter p xs
+		
 
 -- Ex: generate a list that contains all (month, day) pairs in a
 -- 365-day year.
