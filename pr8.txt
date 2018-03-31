@@ -121,7 +121,8 @@ filter' = undefined
 -- 365-day year.
 
 monthsDays :: [(Int, Int)]
-monthsDays = undefined
+monthsDays = zip[1..12][31,28,31,30,31,30,31,31,30,31,30,31]
+[(1,31),(2,28),(3,31),(4,30),(5,31),(6,30),(7,31),(8,31),(9,30),(10,31),(11,30),(12,31)]
 
 -- Ex: generate the infinite list all pairs of natural numbers,
 -- e.g. [(0,0),(0,1),(1,0),(0,2),(1,1),(2,0), ...].
