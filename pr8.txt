@@ -87,7 +87,10 @@ doubleOfSquares = undefined
 -- Ex: list the divisors of 60.
 
 divisorsOf60 :: [Int]
-divisorsOf60 = undefined
+divisorsOf60 = [x | x <- [1..(60-1)], 60 `rem` x == 0]
+--divisors n = [x | x <- [1..(n-1)], n `rem` x == 0]
+--divisors 60
+--[1,2,3,4,5,6,10,12,15,20,30]
 
 -- Ex: test whether a number is a prime (meaning it only has two
 -- divisors: 1 and itself).
