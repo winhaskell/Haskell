@@ -41,7 +41,18 @@ falseTrues = [even(n)|n<-[1..100]]
 -- Ex:
 
 flip :: (a -> b -> c) -> b -> a -> c
-flip = undefined
+flip f x y = f y x
+
+-- Lambda abstractions
+
+flip' :: (a -> b -> c) -> (b -> a -> c)
+flip' f = \x y -> f y x
+
+-- Change the order of arguments of a two argument curried function.
+
+flip :: (a -> b -> c) -> (b -> a -> c)
+flip f x y = f y x
+
 
 -- filter
 
@@ -94,7 +105,9 @@ powersOf2' n = [ x^2 | x <- [0..(n-1)]]
 -- Ex: double of the First 10 Square Numbers
 
 doubleOfSquares :: [Int]
-doubleOfSquares = undefined
+doubleOfSquares =  map (*2)[0,1,4,9,16,25,36,49,64,81]
+-- doubleOfSquares
+-- [0,2,8,18,32,50,72,98,128,162]
 
 -- Ex: list the divisors of 60.
 
