@@ -1,0 +1,24 @@
+http://www.cantab.net/users/antoni.diller/haskell/haskell.html
+
+Introduction to Haskell
+
+For many years, from 2000 to 2012, I taught a course in the School of Computer Science at the University of Birmingham on the pure, 
+functional, programming language Haskell. This comprised ten fifty-minute lectures together with supervised lab sessions. 
+Some of the material I covered in this course was made available to the students on the internet, but in a very rudimentary
+form. More recently, I have expanded and updated this material and have made it more generally available.
+
+unit	exercises no.	name	questions	answers
+1	Getting started	questions	answers
+2	Lists	questions	answers
+3	Floating-point numbers	questions	answers
+4	ZF-expressions	questions	answers
+5	Higher-order functions	questions	answers
+6	The fold functions	questions	answers
+7	Tuples	questions	answers
+8	Stream-based interaction	questions	
+9	Datatypes	questions	
+Note that exercises are provided for each of the units and that answers are available
+for the first seven sets of exercises. Unfortunately, some of the answers are not correct.
+I hope to correct those that are wrong in due course.
+
+© Antoni Diller (21 May 2014)
