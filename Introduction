@@ -1,0 +1,171 @@
+ 
+Introduction
+Haskell is a pure, lazy, typed, functional programming language defined in The Haskell 2010 Report. The Glasgow Haskell Compiler (GHC) is available free of charge and is very easy to install on your own computer. On these pages I describe how the Glasgow Haskell Compiler works in interactive mode; this is known as "GHCi". On a Mac you invoke GHCi by using the command ghci in the Terminal application (available in the Utilities folder). Doing this results in the following being output:
+
+GHCi, version 7.10.3: http://www.haskell.org/ghc/  :? for help
+Prelude>
+You can now type expressions to be evaluated. For example, you can use GHCi like a pocket calculator to evaluate simple arithmetical expressions:
+
+Prelude> 142
+142
+Prelude> 6 * 7
+42
+Prelude> 8 + 39
+47
+Prelude> (34 - 21) * (6 + 98)
+1352
+As well as asking GHCi to evaluate the expressions you input after the prompt, there are several system commands that can also be entered. These all begin with a colon. Amongst the most useful of these are the following:
+
+:q	end the current session
+:?	get help about system commands
+:e file	edit the file named file
+:t exp	get the type of the function called exp
+If all you could do with Haskell is use it to evaluate arithmetical expressions, it wouldn't be very interesting or useful. However, being a programming language means that you can write your own programs which, in Haskell, means defining your own functions. (Some authors call a Haskell program a script.) In order to explain how this is done I first need to introduce some arithmetical and Boolean-valued operators.
+
+Integral types
+Haskell has two integral types, namely Int and Integer. Int is the type of limited-precision integers; this means that there is a smallest integer of type Int, namely minBound, and a greatest integer of type Int, namely maxBound. Integer is the type of arbitrary-precision integers which has neither a smallest nor a largest member. Note that using Int leads to more efficient programs than using Integer; note also that 0 is neither positive nor negative.
+
+Basic arithmetical operators
+Haskell has the following basic binary infix arithmetical operators:
+
++	addition
+-	subtraction
+*	multiplication
+^	exponentiation
+Note that Haskell also has the unary prefix operator - for indicating negative numbers. A quirk of Haskell is that in many contexts negative numbers have to be enclosed in parentheses. If you get a strange error message when using a negative number, try enclosing it in parentheses before looking for other causes of the problem. Note also that / is not the symbol for integer division; the operator / is used to denote the operation of dividing floating-point numbers. Haskell also has the following binary prefix operators:
+
+min	minimum
+max	maximum
+gcd	greatest common divisor
+lcm	lowest common multiple
+div	integer division
+mod	remainder after integer division
+The operators div and mod obey the following identity:
+
+(div x y) * y + (mod x y) = x
+Boolean datatype Bool
+Haskell also has a Boolean datatype Bool, two of whose values are True and False. It has the usual binary infix Boolean-valued operators:
+
+==	equals
+/=	not equal
+<	less than
+<=	less than or equal to
+>	greater than
+>=	greater than or equal to
+There are also several logical operators: || (or), && (and) and not (not). The operators || and && are both binary infix operators, whereas not is a prefix unary operator.
+
+Defining functions
+Haskell is a typed language and it is good programming practice, though not a requirement enforced by the GHCi system, to always include the type of any function that you define. Functions are defined like this:
+
+sqInt :: Int -> Int
+sqInt x = x * x
+
+smallerInt :: Int -> Int -> Int
+smallerInt x y
+  | x <= y    = x
+  | otherwise = y
+The first line here sqInt :: Int -> Int indicates the type of the function sqInt that is being defined. It states that this function is of type Int -> Int, that is to say, it takes an integer as its value and it returns an integer as its value. The symbol :: can be read as "is of type". The second line contains the actual definition of the function sqInt. The single equals sign = indicates that a function is being defined. Note that the functions you define have to begin with a lowercase letter.
+
+The definition of smallerInt introduces several new ideas. Informally, we would say that smallerInt takes two arguments and returns the smaller of them, but all prefix functions in Haskell, including all such user-defined functions, are one-place functions. Thus, what smallerInt really does is to take a single integral argument and return a function which itself takes an integral argument and this function returns the smallest of those two arguments. Note that the arrow in the type Int -> Int -> Int associates to the right; this means it is equivalent to Int -> (Int -> Int). The definition of smallerInt also shows how conditionals are represented in Haskell. The value of smallerInt x y is x if the guard x <= y evaluates to True, otherwise it is y. The keyword otherwise is just a synonym for True.
+
+If you put the above definitions into a file called, say, begin.hs, you can load them into the Haskell system by issuing the command ghci begin.hs. (Files containing Haskell programs typically have the file extension .hs; the extension .lhs is used for literate scripts.) Issuing the command ghci begin.hs results in the following:
+
+GHCi, version 7.10.3: http://www.haskell.org/ghc/  :? for help
+[1 of 1] Compiling Main             ( begin.hs, interpreted )
+Ok, modules loaded: Main.
+Note that the prompt has changed. The prompt Prelude> means that only the standard prelude has been loaded. This is a library of general purpose functions many of which are explained on these webpages. The prompt *Main> indicates that some functions, in addition to the standard prelude, have been loaded into GHCi. You can now make use of the functions defined in the file begin.hs like this:
+
+*Main> sqInt 8
+64
+*Main> smallerInt 7 18
+7
+*Main> sqInt (smallerInt 18 (3 * 9))
+324
+Note that an attempt to evaluate smallerInt -5 6 results in an error message. If you want to find the smaller of -5 and 6, you need to evaluate smallerInt (-5) 6.
+
+If you now issue the system command :e, without any filename, you will open an editor into which begin.hs has been loaded. To ensure that your favourite editor is used, before issuing the command :e, enter the command :set editor vim. (Replace vim with the name of any other editor.) To avoid having to issue this :set command every session you can put it into a .ghci file which should be placed in your home directory (folder).
+
+There are two ways of adding comments to a Haskell program. Everything on a line following two hyphens -- is regarded as a comment by GHCi as is everything inside the symbols {- and -}; these symbols can be nested.
+
+Recursive definitions
+Repetition or iteration is obtained by using recursion. The following function, for example, given an integer x as its argument, returns the sum of all integers between 0 and x:
+
+sumInt :: Int -> Int
+sumInt x
+  | x == 0    = 0
+  | otherwise = x + sumInt (x - 1)
+This definition can be found in sum1.hs. Haskell supports pattern-matching. This means that not only variables are allowed in function definitions. Using pattern-matching sumInt can also be defined like this:
+
+sumInt :: Int -> Int
+sumInt 0 = 0
+sumInt x = x + sumInt (x - 1)
+This definition can be found in sum2.hs. It fails miserably, however, for negative arguments. These can be caught as follows:
+
+sumInt :: Int -> Int
+sumInt 0 = 0
+sumInt x
+  | x < 0     = error "sumInt undefined when x < 0"
+  | otherwise = x + sumInt (x - 1)
+This definition can be found in sum3.hs. It uses the function error of type String -> a, that is to say, it takes a string argument, where a string is a list of characters, and returns a value of any type. The error function throws an exception; it terminates normal evaluation and returns you to the Haskell prompt after displaying the message given to it as its argument.
+
+Defining the Fibonacci numbers
+As another example of function definition I will define the Fibonacci numbers. The first definition uses explicit guards:
+
+fib :: Int -> Int
+fib i
+  | i == 0    = 0
+  | i == 1    = 1
+  | otherwise = fib (i - 1) + fib (i - 2)
+The second definition uses pattern-matching:
+
+fib :: Int -> Int
+fib 0 = 0
+fib 1 = 1
+fib i = fib (i - 1) + fib (i - 2)
+The following definition should be used if you need to know that an attempt has been made to evaluate fib with a negative argument:
+
+fib :: Int -> Int
+fib 0 = 0
+fib 1 = 1
+fib i
+  | i < 0     = error "fib undefined when i < 0"
+  | otherwise = fib (i - 1) + fib (i - 2)
+Local definition
+Haskell supports local definitions, for example:
+
+foo x
+  | x > 0  = p + q
+  | x <= 0 = p - q
+             where
+             p = x^2 + 1
+             q = 3*x^3 - 5
+Local definitions obey Landin's offside rule: "The southeast quadrant that just contains the phrase's first symbol must contain the entire phrase, except possibly for bracketed subexpressions." If local definitions weren't permitted in Haskell, foo would have to be defined like this:
+
+foo x
+  | x > 0  = x^2 + 1 + 3*x^3 - 5
+  | x <= 0 = x^2 + 1 - (3*x^3 - 5)
+Programming style
+The following two definitions of a leap year illustrate bad and good programming style:
+
+leap1 y = (y `mod` 4 == 0) &&
+          (y `mod` 100 /= 0 ||
+           y `mod` 400 == 0)
+
+leap2 y
+  | y `mod` 100 == 0 = y `mod` 400 == 0
+  | otherwise        = y `mod` 4 == 0
+In Haskell leap2 is considered more elegant than leap1.
+
+Motivating qualified types
+In addition to types like Int and Integer Haskell also has type classes. To motivate these consider the problem of defining a square function for arbitrary-precision integers. The function sqInt that I defined earlier cannot be applied to arguments of type Integer, so we would have to defined a new function sqInteger. Then, we would have the following two definitions:
+
+sqInt :: Int -> Int
+sqInt x = x * x
+
+sqInteger :: Integer -> Integer
+sqInteger x = x * x
+The definition of sqInteger duplicates the earlier definition of sqInt. Haskell has a mechanism to avoid such duplication. This involves qualified types. Using such a qualified type we can define a function sqIntegral which can be applied both to arguments of type Int and also of type Integer:
+
+sqIntegral :: Integral a => a -> a
+sqIntegral x = x * x
+Here, Integral is a type class whose elements are the two types Int and Integer and a is a type variable. The type Integral a => a -> a is called a qualified type. Haskell has a polymorphic type system. Some functions, such as the identity function Id x = x of type a -> a, are fully polymorphic; any type whatsoever can be substituted for the type variable a. In the case of sqIntegral you get an error message if you try substituting any type for the type variable a other than Int or Integer.
