@@ -15,7 +15,19 @@ count 'a' str = length $ filter (== 'a') str
 -- library function maximum
 
 howManyMaxs :: Ord a => [a] -> Int
-howManyMaxs = undefined
+
+maximum' [] = error "maximum of empty list"  
+maximum' [x] = x  
+maximum' (x:xs) = max x (maximum' xs)  
+ 
+howManyMaxs xs = length $ filter (== maximum' xs)xs
+howManyMaxs [65,32,99,99,999]
+1
+howManyMaxs [65,32,99,99,99]
+3
+howManyMaxs [65,32,99,99,999,999]
+2
+
 
 -- Ex: return a list of length 1000 with False and True alternating in it: [False, True, False, True, False, ...]
 
