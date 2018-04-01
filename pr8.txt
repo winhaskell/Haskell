@@ -7,7 +7,9 @@ import Data.Char (toUpper)
 -- s. Use the library function sum.
 
 count :: Eq a => a -> [a] -> Int
-count = undefined
+
+count 'a' str = length $ filter (== 'a') str
+-- countLetters c str = length $ filter (== c) str
 
 -- Ex: how many times the maximal element appears in a list? Use the
 -- library function maximum
@@ -44,7 +46,13 @@ count' = undefined
 -- Ex: get the vowels from a string
 
 vowels :: String -> String
-vowels = undefined
+
+isVowel x = elem x ['a','e','i','o','u']
+vowel = filter isVowel
+vvv xs = vowel xs
+vvv "aaankb"
+"aaa"
+vowels xs = filter isVowel xs
 
 -- Ex: return the numbers from the input list which are divisible by 3
 -- or 5
