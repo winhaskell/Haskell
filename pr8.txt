@@ -211,7 +211,19 @@ Main> take 10 counting
 -- Ex: define the map function using list comprehension
 
 map' :: (a -> b) -> [a] -> [b]
-map' = undefined
+
+map :: (a -> b) -> [a] -> [b]  
+map _ [] = []  
+map f (x:xs) = f x : map f xs 
+
+ghci> map (+3) [1,5,3,1,6]  
+[4,8,6,4,9]  
+ghci> map (replicate 3) [3..6]  
+[[3,3,3],[4,4,4],[5,5,5],[6,6,6]]  
+ghci> map (map (^2)) [[1,2],[3,4,5,6],[7,8]]  
+[[1,4],[9,16,25,36],[49,64]]  
+ghci> map fst [(1,2),(3,5),(6,3),(2,6),(2,5)]  
+[1,3,6,2,2]  
 
 -- Ex: define the filter function using list comprehension
 
@@ -234,7 +246,6 @@ monthsDays = zip[1..12][31,28,31,30,31,30,31,31,30,31,30,31]
 -- e.g. [(0,0),(0,1),(1,0),(0,2),(1,1),(2,0), ...].
 
 allPairs :: [(Integer, Integer)]
-allPairs = undefined
 
 allPairs = concat [concat [[(m,n),(n,m)] | let m = t, n <- take m [0..]] ++ [(t,t)] | t <- [0..]]
 take 10 allPairs
@@ -243,7 +254,6 @@ take 10 allPairs
 -- Ex: which is the least natural number n for which 1024^n > 2 * 1000^n?
 
 someNumber :: Integer
---someNumber = undefined
 
 ioo n 
     | 1024^n - 2 * 1000^n>0 =n     
