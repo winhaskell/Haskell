@@ -1,0 +1,33 @@
+The Craft of Functional Programming
+
+https://www.cs.kent.ac.uk/people/staff/sjt/craft2e/Code/code.html
+Haskell: The Craft of Functional Programming, Second Edition
+
+https://www.cs.kent.ac.uk/
+University of Kent 
+
+Calculator
+Eval.hs, Eval.lhs
+Interact.hs, Interact.lhs
+MonadIO.hs
+ParseCalc.hs, ParseCalc.lhs
+ParseLib.hs, ParseLib.lhs
+Store.hs, Store.lhs
+Types.hs, Types.lhs
+Huffman coding
+CodeTable.hs, CodeTable.lhs
+Coding.hs, Coding.lhs
+Frequency.hs, Frequency.lhs
+Main.hs, Main.lhs
+MakeCode.hs, MakeCode.lhs
+MakeTree.hs, MakeTree.lhs
+Types.hs, Types.lhs
+Parsing
+ParseLib.hs, ParseLib.lhs
+Parsing.hs, Parsing.lhs
+Simulation
+Base.hs, Base.lhs
+QueueState.hs, QueueState.lhs
+ServerState.hs, ServerState.lhs
+RandomGen.hs, RandomGen.lhs
+TopLevelServe.hs, TopLevelServe.lhs
