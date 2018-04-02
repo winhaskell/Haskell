@@ -1,0 +1,9 @@
+Prelude Data.List Data.Char> map ord "Heeeeey"
+[72,101,101,101,101,101,121]
+
+Prelude Data.List Data.Char> map (+3) (map ord "Heeeeey")
+[75,104,104,104,104,104,124]
+
+Prelude Data.List Data.Char> map toUpper "wow thats great r2-d2"
+"WOW THATS GREAT R2-D2"
+Prelude Data.List Data.Char>
