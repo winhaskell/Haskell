@@ -1,0 +1,24 @@
+practice: map,filter,group,maximum,\\,repeat,take,length
+
+Prelude Data.List>filter (/=[False])(group [True,True,False,True,True,True,False,False,False])
+[[True,True],[True,True,True],[False,False,False]]
+
+group [False,True,True,True,True,False,False,False,True,True,True,False,False]\\([take n ( repeat False )|n<-[1..10]])
+ 
+Prelude Data.List>group [False,True,True,True,True,False,False,False,True,True,True,False,False]\\([take n ( repeat False )|n<-[1..10]])
+[[True,True,True,True],[True,True,True]]
+
+Prelude Data.List> maximum(map (length)[[True,True],[True,True,True],[True],[True]])
+3
+
+Prelude Data.List> (group [True,True,False,True,True,True,False,False,False])\\[take n ( repeat False )|n<-[1..10]]
+[[True,True],[True,True,True]]
+Prelude Data.List>
+
+Prelude Data.List> (map (length) (group [True,True,False,True,True,True,False,False,False]\\[take n ( repeat False )|n<-[1..10]]))
+[2,3]
+Prelude Data.List>
+
+Prelude Data.List> maximum(map (length) (group [True,True,False,True,True,True,False,False,False]\\[take n ( repeat False )|n<-[1..10]]))
+3
+Prelude Data.List>
