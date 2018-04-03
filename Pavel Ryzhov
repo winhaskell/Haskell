@@ -1,0 +1,30 @@
+Haskell Financial Data Modeling and Predictive Analytics
+
+Pavel Ryzhov
+October 2013
+
+Book Description
+Haskell is one of the three most influential functional programming languages available today 
+along with Lisp and Standard ML. When used for financial analysis, you can achieve a much-improved 
+level of prediction and clear problem descriptions.
+
+Haskell Financial Data Modeling and Predictive Analytics is a hands-on guide that employs a mix 
+of theory and practice. Starting with the basics of Haskell, this book walks you through the 
+mathematics involved and how this is implemented in Haskell.
+
+The book starts with an introduction to the Haskell platform and the Glasgow Haskell Compiler (GHC). 
+You will then learn about the basics of high frequency financial data mathematics as well as how to 
+implement these mathematical algorithms in Haskell.
+
+You will also learn about the most popular Haskell libraries and frameworks like Attoparsec, 
+QuickCheck, and HMatrix. You will also become familiar with database access using Yesod’s Persistence 
+library, allowing you to keep your data organized. The book then moves on to discuss the mathematics 
+of counting processes and autoregressive conditional duration models, which are quite common modeling
+tools for high frequency tick data. At the end of the book, you will also learn about the volatility 
+prediction technique.
+
+With Haskell Financial Data Modeling and Predictive Analytics, you will learn everything you need 
+to know about financial data modeling and predictive analytics using functional programming in Haskell.
+
+
+https://www.packtpub.com/big-data-and-business-intelligence/haskell-financial-data-modeling-and-predictive-analytics
