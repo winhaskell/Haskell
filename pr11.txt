@@ -1,0 +1,119 @@
+import Data.Char
+import Data.List
+import Test.QuickCheck
+
+-- 1
+
+occurs :: Eq a => a -> [a] -> Int
+occurs a as = length $ filter (==a) as
+
+Prelude Data.List Data.Char> occurs "hej" ["hi","hola","hello","hoi"]
+0
+Prelude Data.List Data.Char> occurs 11 [2,3,5,7,11,13,7,5]
+1
+Prelude Data.List Data.Char>  occurs 'a' "bepacepadepa"
+3
+Prelude Data.List Data.Char>  occurs 'a' "bepacepadepaoka"
+4
+Prelude Data.List Data.Char>
+
+-- 2
+
+urls :: String -> [String]
+urls s = [ w | w <- words s, "http://" `isPrefixOf` w ]
+
+Prelude Data.List Data.Char>  urls "I tried loading http://www.chalmers.se and http://www.google.com ."
+["http://www.chalmers.se","http://www.google.com"]
+Prelude Data.List Data.Char>
+
+Prelude Data.List Data.Char> urls "http://asdreer"
+["http://asdreer"]
+Prelude Data.List Data.Char> urls "//asdreer"
+[]
+
+-- 3
+
+data Road
+    = City String
+    | Fork Road Road
+  deriving (Show)
+
+middleOfNowhere :: Road
+middleOfNowhere =
+    Fork
+      ( City "Mora" )
+      ( Fork
+          ( Fork
+              ( City "Kiruna" )
+              ( City "GÃ¤vle" )
+          )
+          ( City "Stockholm" )
+      )
+
+reachable :: String -> Road -> Bool
+reachable city (City c)   = city==c
+reachable city (Fork l r) = reachable city l || reachable city r
+
+*Main> reachable "Kiruna" middleOfNowhere
+True
+
+*Main> reachable "Jukkasjärvi" middleOfNowhere
+False
+
+
+-- 4
+
+prop_nub_length :: [Int] -> Bool
+prop_nub_length as = length (nub as) <= length as
+
+
+-- 5
+
+copyFile :: FilePath -> FilePath -> IO ()
+copyFile file1 file2 =
+  do s <- readFile file1
+     writeFile file2 s
+     
+*Main> readFile "apa.txt"
+"abracadabra"
+
+*Main> copyFile "apa.txt" "bepa.txt"
+
+*Main> readFile "bepa.txt"
+"abracadabra"
+
+-- 6
+
+data Turn = L | R
+  deriving (Show)
+
+roadMap :: String -> Road -> Maybe [Turn]
+roadMap city (City c)
+    | city==c   = Just []
+    | otherwise = Nothing
+roadMap city (Fork l r) = case (roadMap city l, roadMap city r) of
+    (Just ts, _) -> Just (L:ts)
+    (_, Just ts) -> Just (R:ts)
+    _            -> Nothing
+
+test_roadMap = roadMap "Stockholm" middleOfNowhere
+
+--------------------------------------------------------------------------------
+-- 7
+
+fill :: Int -> [String] -> [String]
+fill n [] = []
+fill n ws =
+  case split n ws of
+    ([],_)  -> head ws : fill n (tail ws)
+    (as,bs) -> unwords as : fill n bs
+
+split :: Int -> [String] -> ([String],[String])
+split n []       = ([],[])
+split n (w:ws)
+  | n < length w = ([],w:ws)
+  | otherwise    = (w:as,bs)
+ where
+  (as,bs) = split (n-length w-1) ws
+
+
