@@ -1,0 +1,101 @@
+--1. Implement a function
+
+findIndex :: Eq a => a -> [a] -> Int
+that given an x and a list xs, finds out at what position x occurs in the list. We start counting positions at 0. If there are multiple positions, the function findIndex always produces the first position x is at.
+
+Examples:
+
+  Main> findIndex 'a' "bepacepa"
+  3
+ 
+The function may assume that x actually occurs in the list. (So, you may do whatever you want if x does not occur in the list.)
+
+Prelude Data.List Data.Char> findIndex x (y:ys) | x == y    = 0| otherwise = 1 + findIndex x ys
+Prelude Data.List Data.Char> findIndex 11 [2,3,5,7,11,13]
+4
+
+Prelude Data.List Data.Char>  findIndex "@" ["@99","hi","hola","hello","hoi"]
+*** Exception: <interactive>:100:1-66: Non-exhaustive patterns in function findIndex
+
+Prelude Data.List Data.Char>  findIndex "@99" ["@99","hi","hola","hello","hoi"]
+0
+Prelude Data.List Data.Char>  findIndex "@999" ["@99","hi","hola","hello","@999"]
+4
+Prelude Data.List Data.Char>
+
+
+--2. Implement a function
+
+  extension :: String -> String
+that given a file name, produces the file extension. The extension consists of the last dot (".") occurring in the file name, plus all characters following that dot.
+
+If there is no dot in the filename, you may decide yourself what you do.
+
+If there is more than one dot in the filename, the extension starts at the last dot.
+
+Examples:
+
+  Main> extension "tenta.doc"
+  ".doc"
+
+  Main> extension "Sherlock_Holmes.English.srt"
+  ".srt"
+
+  Main> extension "www.chalmers.se"
+  ".se"
+  
+  
+--3. Implement a function
+
+data Form
+  = And Form Form
+  | Or Form Form
+  | Not Form
+  | Val Bool
+
+eval :: Form -> Bool
+eval (And a b) = eval a && eval b
+eval (Or a b)  = eval a || eval b
+eval (Not a)   = not (eval a)
+eval (Val x)   = x
+
+
+--4. Implement a function
+
+  ordered :: Ord a => [a] -> Bool
+that given a list of elements, checks if the list is in sorted order.
+
+Examples:
+
+  Main> ordered [4,8,15,16,23,42]
+  True
+
+  Main> ordered ["apa","bepa","cepa","xepa"]
+  True
+
+  Main> ordered []
+  True
+  
+  ordered :: Ord a => [a] -> Bool
+ordered []       = True
+ordered [x]      = True
+ordered (x:y:xs) = x <= y && ordered (y:xs)
+
+-- alternatively:
+ordered2 :: Ord a => [a] -> Bool
+ordered2 xs = sort xs == xs
+
+Prelude Data.List Data.Char> ordered2 [4,8,15,16,23,42]
+True
+
+Prelude Data.List Data.Char> ordered2 [4,8,15,16,23,42,2]
+False
+ 
+Prelude Data.List Data.Char> ordered2 ["apa","bepa","cepa","xepa"]
+True
+
+Prelude Data.List Data.Char> ordered2 ["apa","bepa","cepa","xepa","sret"]
+False
+
+Prelude Data.List Data.Char>
+
