@@ -17,6 +17,14 @@ Prelude Data.List Data.Char>  occurs 'a' "bepacepadepaoka"
 4
 Prelude Data.List Data.Char>
 
+Prelude Data.List Data.Char> count p xs = length (filter p xs)
+Prelude Data.List Data.Char> count (==2) [1,2,3,4,5]
+1
+Prelude Data.List Data.Char> count (==2) [1,2,3,4,5,2]
+2
+Prelude Data.List Data.Char>
+
+
 -- 2
 
 urls :: String -> [String]
