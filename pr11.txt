@@ -125,3 +125,29 @@ split n (w:ws)
   (as,bs) = split (n-length w-1) ws
 
 
+-- 8
+ Implement a function
+
+  names :: String -> [String]
+
+that given a text in the form of a String, finds all names in the text. A name
+is a word that starts with a capital letter. 
+
+Examples:
+
+  Main> names "Kalle hjÃ¤rta Anna"
+  ["Kalle","Anna"]
+
+  Main> names "his name was Thomas but everyone called him Tom"
+  ["Thomas","Tom"]
+
+Hints:
+
+  * use the standard functions words and isUpper
+  
+names :: String -> [String]
+names s = filter (isUpper . head) (words s)
+
+Prelude Data.List Data.Char> names "his name was Thomas but everyone called him Tom"
+["Thomas","Tom"]
+
