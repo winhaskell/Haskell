@@ -1,4 +1,5 @@
-# Haskell
+Haskell Review and Tips
+
 
 
 
